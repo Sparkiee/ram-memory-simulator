@@ -1,65 +1,72 @@
-# Ram Memory Simulator
-Authored by Maxim Shteingard
-209171156
+# RAM Memory Simulator
+**Author:** Maxim Shteingard  
 
-== Description ==
-	The provided code manages a simplified model of a computer's memory system, implementing a basic paging system
-	with a Least Recently Used (LRU) page replacement algorithm. It divides memory into fixed-size pages and maps
-	these to physical addresses using a page table.
+---
 
-	    Page Table:
-	        The page table is a two-dimensional array page_table[out][in] that keeps track of the mapping
-	        from virtual to physical memory. Each page entry contains a boolean valid flag indicating whether
-	        the page is in main memory or not, an integer frame that represents the index in main memory where
-	        the page is stored, an integer last_access that keeps track of the last time the page was accessed,
-	        and an integer swap_index that keeps track of the location in the swap file if the page has been moved
-	        to swap.
+## Description
 
-        Paging:
-            When a page is requested that isn't in main memory (a page fault), the code checks if there is available
-             memory. If memory is full, it uses the LRU page replacement algorithm to decide which page to evict.
-             The evictPage() function identifies the page that was least recently used and moves it to
-             the swap file if necessary.
+The provided code offers a simulation of a computer's memory system, incorporating a basic paging system with a Least Recently Used (LRU) page replacement algorithm. The memory is split into fixed-sized pages, and these are mapped to physical addresses using a page table.
 
-        Swapping:
-            If a page is moved out of main memory to make room for a new page, the move_to_swap() function moves
-            the page to the swap file and updates the page table. Pages are written back to main memory from the
-            swap file if they are requested and not in main memory.
+### Page Table
 
-        Address Translation:
-            The parseAddress() function takes a virtual address and splits it into an offset and two indices in and
-            out for the page table.
+The page table is a two-dimensional array `page_table[out][in]` that maintains the mapping from virtual to physical memory. Each page entry contains:
+- A boolean `valid` flag indicating the page's presence in main memory.
+- An integer `frame` showing the index in main memory where the page resides.
+- An integer `last_access` recording the last time the page was accessed.
+- An integer `swap_index` pointing to the location in the swap file if the page has been moved to swap.
 
-        Loading and Storing:
-            The load() and store() functions are used to read and write to memory, respectively.
-            Both functions handle page faults by loading pages into memory as needed and updating the page table
-            and clock.
+### Paging
 
-        Clock:
-            The system uses a global variable clock to keep track of the passage of "time" for the LRU algorithm.
-            Each time a page is loaded or stored, the clock is incremented.
+When a non-resident page in main memory is requested (page fault), the code checks for available memory. If memory is saturated, the LRU page replacement algorithm determines which page to evict. The `evictPage()` function pinpoints the least recently used page, transferring it to the swap file if needed.
 
-        Segmentation:
-            The memory is divided into three segments: TEXT_SEGMENT, DATA_SEGMENT, BSS_SEGMENT, and HEAP_STACK_SEGMENT.
+### Swapping
 
-    This project provides a basic simulation of how operating systems handle memory management,
-    page faults, and swapping. It can be used as a foundation for further exploration into memory management
-    techniques and operating system design.
+The `move_to_swap()` function transfers a page to the swap file if evicted from main memory for a new page and subsequently updates the page table. Pages are retrieved back to main memory from the swap file when requested and absent in main memory.
 
-==input==:
-	    load(int address): This method reads the byte at the given virtual address.
-	        The address is an integer representing the virtual memory address to be read.
+### Address Translation
 
-        store(int address, char value):
-            This method writes the byte value to the given virtual address. The address is an integer representing
-            the virtual memory address to be written, and value is the byte (character) to be written to this
-            location.
+The `parseAddress()` function accepts a virtual address and decomposes it into an offset and two indices (`in` and `out`) for the page table.
 
-==output==:
-        The program displays how would the physical memory, the swap and the page table look like at each
-        step of the way.
+### Loading and Storing
 
+The `load()` and `store()` functions are utilized for memory reading and writing, respectively. They handle page faults, load required pages into memory, and refresh the page table and clock.
 
-==How to compile & run==:
-	Type: make
-  Make sure to add 'exec_file' into the cmake-build-debug if you're running the code in CLion
+### Clock
+
+The system adopts a global variable `clock` to monitor the "time" progression for the LRU algorithm. Every page load or store increments the clock.
+
+### Segmentation
+
+Memory is segmented into: 
+- `TEXT_SEGMENT`
+- `DATA_SEGMENT`
+- `BSS_SEGMENT`
+- `HEAP_STACK_SEGMENT`
+
+This simulation offers foundational insights into OS memory management, page faults, and swapping, serving as a bedrock for deeper exploration into memory management strategies and OS designs.
+
+---
+
+## Input
+
+- `load(int address)`: Reads the byte at the provided virtual address, where `address` denotes the virtual memory address to be read.
+
+- `store(int address, char value)`: Writes the byte value to the specified virtual address. Here, `address` signifies the virtual memory address to be written, and `value` is the byte (character) inscribed at this location.
+
+---
+
+## Output
+
+The program vividly demonstrates the state of physical memory, the swap, and the page table at every step.
+
+---
+
+## Compilation & Execution
+
+To compile:
+
+\```bash
+make
+\```
+
+**Note**: Remember to insert `exec_file` into the `cmake-build-debug` if executing the code in CLion.
